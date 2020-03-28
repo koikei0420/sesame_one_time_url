@@ -28,7 +28,7 @@ export default new Vuex.Store({
   actions: {
   },
   getters: {
-    allCredential(state) {
+    all(state) {
       if (!state.loggedIn) {
         return {
           error: 'not logged-in',
