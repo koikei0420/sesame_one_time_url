@@ -2,12 +2,12 @@
 
 <template>
   <v-container fluid>
-    <v-btn
+    <v-card
        v-if="loggedInUser.loggedIn"
-       color="info"
     >
-      {{loggedInUser.name}}
-    </v-btn>
+      <v-card-text> {{loggedInUser.name}} </v-card-text>
+      <v-card-text> {{loggedInUser.email}} </v-card-text>
+    </v-card>
     <v-btn 
        v-else
        color="primary"
