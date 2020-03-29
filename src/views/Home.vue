@@ -56,6 +56,7 @@ export default {
             email: result.user.email,
           },
         );
+        this.loggedInUser = this.$store.getters.all;
         this.error = false;
       }).catch(error => {
         console.log(error);
