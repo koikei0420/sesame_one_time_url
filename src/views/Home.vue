@@ -34,29 +34,40 @@ import firebase from 'firebase/app'
 export default {
   name: 'Home',
   data: () => ({
-    loggedInUser: {},
+    loggedInUser: {
+      name: '',
+      email: '',
+      loggedIn: false,
+    },
     error: false,
     errorMessage: '',
   }),
   mounted() {
-    this.loggedInUser = this.$store.getters.all;
+    this.isLoggedIn();
   },
   updated() {
-    this.loggedInUser = this.$store.getters.all;
+    this.isLoggedIn();
   },
   methods: {
+    isLoggedIn() {
+      firebase.auth().onAuthStateChanged( user => {
+        if (user) {
+          this.loggedInUser.name = user.displayName;
+          this.loggedInUser.email = user.email;
+          this.loggedInUser.loggedIn = true;
+        }
+      });
+    },
     googleLogin() {
       const provider = new firebase.auth.GoogleAuthProvider();
 
+      provider.addScope('profile');
+      provider.addScope('email');
+
       firebase.auth().signInWithPopup(provider).then(result => {
-        this.$store.commit(
-          'sign_in',
-          {
-            name: result.user.displayName,
-            email: result.user.email,
-          },
-        );
-        this.loggedInUser = this.$store.getters.all;
+        this.loggedInUser.name = result.user.displayName,
+        this.loggedInUser.email = result.user.email,
+        this.loggedInUser.loggedIn = true;
         this.error = false;
       }).catch(error => {
         console.log(error);
