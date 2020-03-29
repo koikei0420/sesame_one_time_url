@@ -7,6 +7,12 @@
     >
       <v-card-text> {{loggedInUser.name}} </v-card-text>
       <v-card-text> {{loggedInUser.email}} </v-card-text>
+      <v-btn
+        color="error"
+        @click="logout"
+      >
+        Logout
+      </v-btn>
     </v-card>
     <v-btn 
        v-else
@@ -42,7 +48,7 @@ export default {
     error: false,
     errorMessage: '',
   }),
-  mounted() {
+  created() {
     this.isLoggedIn();
   },
   updated() {
@@ -68,6 +74,18 @@ export default {
         this.loggedInUser.name = result.user.displayName,
         this.loggedInUser.email = result.user.email,
         this.loggedInUser.loggedIn = true;
+        this.error = false;
+      }).catch(error => {
+        console.log(error);
+        this.errorMessage = error.message;
+        this.error = true;
+      })
+    },
+    logout() {
+      firebase.auth().signOut().then( () => {
+        this.loggedInUser.name = '',
+        this.loggedInUser.email = '',
+        this.loggedInUser.loggedIn = false;
         this.error = false;
       }).catch(error => {
         console.log(error);
