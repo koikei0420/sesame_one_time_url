@@ -56,11 +56,13 @@ export default {
   },
   methods: {
     isLoggedIn() {
-      firebase.auth().onAuthStateChanged( user => {
-        if (user) {
-          this.loggedInUser.name = user.displayName;
-          this.loggedInUser.email = user.email;
-          this.loggedInUser.loggedIn = true;
+      firebase.auth().onAuthStateChanged(user => {
+        if (user != null) {
+          this.loggedInUser = {
+            name: user.displayName,
+            email:  user.email,
+            loggedIn: true
+          }
         }
       });
     },
@@ -71,9 +73,11 @@ export default {
       provider.addScope('email');
 
       firebase.auth().signInWithPopup(provider).then(result => {
-        this.loggedInUser.name = result.user.displayName,
-        this.loggedInUser.email = result.user.email,
-        this.loggedInUser.loggedIn = true;
+        this.loggedInUser = {
+          name: result.user.displayName,
+          email:  result.user.email,
+          loggedIn: true
+        }
         this.error = false;
       }).catch(error => {
         console.log(error);
@@ -82,10 +86,12 @@ export default {
       })
     },
     logout() {
-      firebase.auth().signOut().then( () => {
-        this.loggedInUser.name = '',
-        this.loggedInUser.email = '',
-        this.loggedInUser.loggedIn = false;
+      firebase.auth().signOut().then(() => {
+        this.loggedInUser = {
+          name: '',
+          email: '',
+          loggedIn: false,
+        }
         this.error = false;
       }).catch(error => {
         console.log(error);
